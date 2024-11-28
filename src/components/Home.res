@@ -1,4 +1,7 @@
 @react.component
 let make = async () => {
-  <div className="flex flex-col gap-7"> {"Hello, React-tRace!"->React.string} </div>
+  <main className="flex flex-col gap-4">
+    <h1 className="text-3xl"> {"React-tRace"->React.string} </h1>
+    <Editor />
+  </main>
 }

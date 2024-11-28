@@ -26,7 +26,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${notoSerif.className} ${jetbrainsMono.variable} antialiased`}
+        className={`${notoSerif.className} ${jetbrainsMono.variable} antialiased px-6 py-6 max-w-xl mx-auto md:max-w-2xl`}
       >
         {children}
       </body>

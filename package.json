@@ -13,11 +13,14 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@codemirror/lang-javascript": "^6.2.2",
     "@rescript/core": "^1.6.1",
     "@rescript/react": "^0.13.0",
+    "@uiw/codemirror-theme-tokyo-night-day": "^4.23.6",
+    "@uiw/react-codemirror": "^4.23.6",
+    "next": "15.0.3",
     "react": "19.0.0-rc-66855b96-20241106",
-    "react-dom": "19.0.0-rc-66855b96-20241106",
-    "next": "15.0.3"
+    "react-dom": "19.0.0-rc-66855b96-20241106"
   },
   "devDependencies": {
     "typescript": "^5",
