@@ -17,11 +17,21 @@ view [D (), 0]
 
 let javascript = LangJavaScript.javascript()
 
+let reacttrace = value => {
+  let fuel = 0
+  try {
+    ReacttRace.run(fuel, value)
+  } catch {
+  | Exn.Error(_) => "Runtime error"
+  }
+}
+
 @react.component
 let make = () => {
   let (value, setValue) = React.useState(() => sample)
+  let (recordings, setRecordings) = React.useState(() => reacttrace(value))
   let onChange = value => {
-    Console.log(value)
+    setRecordings(_ => reacttrace(value))
     setValue(_ => value)
   }
 
@@ -33,6 +43,6 @@ let make = () => {
       onChange
       extensions=[CodeMirrorThemeTokyoNightDay.tokyoNightDay, javascript]
     />
-    {"React-tRace"->React.string}
+    <div className="whitespace-pre-wrap"> {recordings->React.string} </div>
   </div>
 }
