@@ -23,15 +23,21 @@ function Editor(props) {
           return value;
         });
   };
-  return JsxRuntime.jsx(ReactCodemirror, {
-              value: match[0],
-              mode: "ocaml",
-              height: "300px",
-              onChange: onChange,
-              extensions: [
-                CodemirrorThemeTokyoNightDay.tokyoNightDay,
-                javascript
-              ]
+  return JsxRuntime.jsxs("div", {
+              children: [
+                JsxRuntime.jsx(ReactCodemirror, {
+                      value: match[0],
+                      mode: "ocaml",
+                      height: "300px",
+                      onChange: onChange,
+                      extensions: [
+                        CodemirrorThemeTokyoNightDay.tokyoNightDay,
+                        javascript
+                      ]
+                    }),
+                "React-tRace"
+              ],
+              className: "flex flex-col gap-4"
             });
 }
 

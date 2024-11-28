@@ -15,7 +15,7 @@ let D _ =
 view [D (), 0]
 `->String.trim
 
-let javascript = JavaScript.javascript()
+let javascript = LangJavaScript.javascript()
 
 @react.component
 let make = () => {
@@ -25,7 +25,14 @@ let make = () => {
     setValue(_ => value)
   }
 
-  <CodeMirror
-    value mode="ocaml" height="300px" onChange extensions=[TokyoNightDay.tokyoNightDay, javascript]
-  />
+  <div className="flex flex-col gap-4">
+    <ReactCodeMirror
+      value
+      mode="ocaml"
+      height="300px"
+      onChange
+      extensions=[CodeMirrorThemeTokyoNightDay.tokyoNightDay, javascript]
+    />
+    {"React-tRace"->React.string}
+  </div>
 }

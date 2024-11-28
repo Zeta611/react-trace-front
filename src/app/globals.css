@@ -7,6 +7,10 @@ pre {
   font-family: var(--font-jetbrains-mono), monospace;
 }
 
+.cm-content {
+  font-family: var(--font-jetbrains-mono), monospace;
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
