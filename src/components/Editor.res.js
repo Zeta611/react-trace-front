@@ -4,7 +4,8 @@
 import * as Curry from "rescript/lib/es6/curry.js";
 import * as React from "react";
 import * as Js_exn from "rescript/lib/es6/js_exn.js";
-import * as ReacttRace from "../shared/ReacttRace.res.js";
+import * as Core__Option from "@rescript/core/src/Core__Option.res.js";
+import * as ReacttRaceWrapper from "../shared/ReacttRaceWrapper.res.js";
 import * as JsxRuntime from "react/jsx-runtime";
 import * as Caml_js_exceptions from "rescript/lib/es6/caml_js_exceptions.js";
 import ReactCodemirror from "@uiw/react-codemirror";
@@ -15,16 +16,41 @@ var sample = "\nlet C x =\n  let (s, setS) = useState x in\n  if s = 42 then\n  
 
 var javascript = Curry._1(LangJavascript.javascript, undefined);
 
-function reacttrace(value) {
-  try {
-    return ReacttRace.run(0, value);
-  }
-  catch (raw_exn){
-    var exn = Caml_js_exceptions.internalToOCamlException(raw_exn);
-    if (exn.RE_EXN_ID === Js_exn.$$Error) {
-      return "Runtime error";
+var fetchedReacttRace = {
+  contents: undefined
+};
+
+function handleExn(run) {
+  return function (fuel, value) {
+    try {
+      return run(fuel, value);
     }
-    throw exn;
+    catch (raw_e){
+      var e = Caml_js_exceptions.internalToOCamlException(raw_e);
+      if (e.RE_EXN_ID === Js_exn.$$Error) {
+        console.error(e._1);
+        return "Runtime error";
+      }
+      throw e;
+    }
+  };
+}
+
+function reacttRace(fuel, value, setRecording) {
+  var run = fetchedReacttRace.contents;
+  if (run !== undefined) {
+    return setRecording(function (param) {
+                return run(fuel, value);
+              });
+  } else {
+    ((async function () {
+            var run = handleExn(await ReacttRaceWrapper.$$fetch());
+            fetchedReacttRace.contents = run;
+            return setRecording(function (param) {
+                        return run(fuel, value);
+                      });
+          })());
+    return ;
   }
 }
 
@@ -35,16 +61,23 @@ function Editor(props) {
   var setValue = match[1];
   var value = match[0];
   var match$1 = React.useState(function () {
-        return reacttrace(value);
+        return Core__Option.map(fetchedReacttRace.contents, (function (run) {
+                      return run(0, value);
+                    }));
       });
-  var setRecordings = match$1[1];
+  var setRecording = match$1[1];
+  var recording = match$1[0];
+  React.useEffect((function () {
+          if (Core__Option.isNone(recording)) {
+            reacttRace(0, value, setRecording);
+          }
+          
+        }), []);
   var onChange = function (value) {
-    setRecordings(function (param) {
-          return reacttrace(value);
-        });
     setValue(function (param) {
           return value;
         });
+    reacttRace(0, value, setRecording);
   };
   return JsxRuntime.jsxs("div", {
               children: [
@@ -59,7 +92,7 @@ function Editor(props) {
                       ]
                     }),
                 JsxRuntime.jsx("div", {
-                      children: match$1[0],
+                      children: Core__Option.getOr(recording, "Loading..."),
                       className: "whitespace-pre-wrap"
                     })
               ],
@@ -72,7 +105,8 @@ var make = Editor;
 export {
   sample ,
   javascript ,
-  reacttrace ,
+  fetchedReacttRace ,
+  reacttRace ,
   make ,
 }
 /* sample Not a pure module */
