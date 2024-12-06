@@ -74,8 +74,9 @@ let make = () => {
       height="300px"
       onChange
       extensions=[CodeMirrorThemeTokyoNightDay.tokyoNightDay, javascript]
+      className="text-base font-mono"
     />
-    <div className="whitespace-pre-wrap">
+    <div className="text-lg font-sans text-gray-800 whitespace-pre-wrap">
       {recording->Option.getOr("Loading...")->React.string}
     </div>
   </div>

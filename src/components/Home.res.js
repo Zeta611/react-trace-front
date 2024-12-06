@@ -8,7 +8,7 @@ async function make(param) {
               children: [
                 JsxRuntime.jsx("h1", {
                       children: "React-tRace",
-                      className: "text-3xl"
+                      className: "text-4xl font-serif"
                     }),
                 JsxRuntime.jsx(Editor.make, {})
               ],

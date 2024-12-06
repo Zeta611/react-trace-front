@@ -89,11 +89,12 @@ function Editor(props) {
                       extensions: [
                         CodemirrorThemeTokyoNightDay.tokyoNightDay,
                         javascript
-                      ]
+                      ],
+                      className: "text-base font-mono"
                     }),
                 JsxRuntime.jsx("div", {
                       children: Core__Option.getOr(recording, "Loading..."),
-                      className: "whitespace-pre-wrap"
+                      className: "text-lg font-sans text-gray-800 whitespace-pre-wrap"
                     })
               ],
               className: "flex flex-col gap-4"

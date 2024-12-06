@@ -1,10 +1,17 @@
 import type { Metadata } from "next";
-import { DM_Serif_Display, JetBrains_Mono } from "next/font/google";
+import { Montserrat, DM_Serif_Display, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
 const notoSerif = DM_Serif_Display({
   weight: "400",
   preload: false,
+  variable: "--font-dm-serif-display",
+});
+
+const montserrat = Montserrat({
+  weight: "500",
+  preload: false,
+  variable: "--font-noto-sans",
 });
 
 const jetbrainsMono = JetBrains_Mono({
@@ -26,7 +33,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${notoSerif.className} ${jetbrainsMono.variable} antialiased px-6 py-6 max-w-xl mx-auto md:max-w-2xl`}
+        className={`${notoSerif.variable} ${montserrat.variable} ${jetbrainsMono.variable} antialiased px-6 py-6 max-w-xl mx-auto md:max-w-2xl`}
       >
         {children}
       </body>
