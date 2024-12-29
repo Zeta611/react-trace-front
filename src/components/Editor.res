@@ -2,13 +2,13 @@
 
 let sample = `
 let C x =
-  let (s, setS) = useState x in
+  let (s, setS) = useState(x) in
   if s = 42 then
     setS (fun s -> s + 1);
   view [()]
 ;;
 let D _ =
-  let (s, setS) = useState true in
+  let (s, setS) = useState(true) in
   useEffect (setS (fun _ -> false));
   view [C 42]
 ;;
@@ -73,7 +73,7 @@ let make = () => {
       mode="ocaml"
       height="300px"
       onChange
-      extensions=[CodeMirrorThemeTokyoNightDay.tokyoNightDay, javascript]
+      extensions=[CodeMirrorThemeTokyoNightDay.tokyoNightDay, javascript, HookLabelPlugin.plugin]
       className="text-base font-mono"
     />
     <div className="text-lg font-sans text-gray-800 whitespace-pre-wrap">

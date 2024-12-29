@@ -5,6 +5,7 @@ import * as Curry from "rescript/lib/es6/curry.js";
 import * as React from "react";
 import * as Js_exn from "rescript/lib/es6/js_exn.js";
 import * as Core__Option from "@rescript/core/src/Core__Option.res.js";
+import * as HookLabelPlugin from "../shared/HookLabelPlugin.res.js";
 import * as ReacttRaceWrapper from "../shared/ReacttRaceWrapper.res.js";
 import * as JsxRuntime from "react/jsx-runtime";
 import * as Caml_js_exceptions from "rescript/lib/es6/caml_js_exceptions.js";
@@ -12,7 +13,7 @@ import ReactCodemirror from "@uiw/react-codemirror";
 import * as LangJavascript from "@codemirror/lang-javascript";
 import * as CodemirrorThemeTokyoNightDay from "@uiw/codemirror-theme-tokyo-night-day";
 
-var sample = "\nlet C x =\n  let (s, setS) = useState x in\n  if s = 42 then\n    setS (fun s -> s + 1);\n  view [()]\n;;\nlet D _ =\n  let (s, setS) = useState true in\n  useEffect (setS (fun _ -> false));\n  view [C 42]\n;;\nview [D (), 0]\n".trim();
+var sample = "\nlet C x =\n  let (s, setS) = useState(x) in\n  if s = 42 then\n    setS (fun s -> s + 1);\n  view [()]\n;;\nlet D _ =\n  let (s, setS) = useState(true) in\n  useEffect (setS (fun _ -> false));\n  view [C 42]\n;;\nview [D (), 0]\n".trim();
 
 var javascript = Curry._1(LangJavascript.javascript, undefined);
 
@@ -88,7 +89,8 @@ function Editor(props) {
                       onChange: onChange,
                       extensions: [
                         CodemirrorThemeTokyoNightDay.tokyoNightDay,
-                        javascript
+                        javascript,
+                        HookLabelPlugin.plugin
                       ],
                       className: "text-base font-mono"
                     }),
