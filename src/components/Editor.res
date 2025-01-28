@@ -15,7 +15,11 @@ let D _ =
 view [D (), 0]
 `->String.trim
 
-let javascript = LangJavaScript.javascript()
+// let javascript = LangJavaScript.javascript()
+
+@module("../shared/syntax/language.js")
+external core: 'lang = "core"
+let coreLang = core()
 
 let fetchedReacttRace: ref<option<(int, string) => string>> = ref(None)
 
@@ -70,10 +74,8 @@ let make = () => {
   <div className="flex flex-col gap-4">
     <ReactCodeMirror
       value
-      mode="ocaml"
-      height="300px"
       onChange
-      extensions=[CodeMirrorThemeTokyoNightDay.tokyoNightDay, javascript, HookLabelPlugin.plugin]
+      extensions=[CodeMirrorThemeTokyoNightDay.tokyoNightDay, coreLang, HookLabelPlugin.plugin]
       className="text-base font-mono"
     />
     <div className="text-lg font-sans text-gray-800 whitespace-pre-wrap">

@@ -10,10 +10,12 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "lezer": "lezer-generator src/shared/syntax/core.grammar -o src/shared/syntax/parser.js"
   },
   "dependencies": {
     "@codemirror/lang-javascript": "^6.2.2",
+    "@lezer/lr": "^1.4.2",
     "@rescript/core": "^1.6.1",
     "@rescript/react": "^0.13.0",
     "@uiw/codemirror-theme-tokyo-night-day": "^4.23.6",
@@ -23,6 +25,7 @@
     "react-dom": "19.0.0-rc-66855b96-20241106"
   },
   "devDependencies": {
+    "@lezer/generator": "^1.7.2",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

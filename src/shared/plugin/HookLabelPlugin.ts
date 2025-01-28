@@ -27,12 +27,21 @@ class HookLabelWidget extends WidgetType {
 function hookLabels(view: EditorView) {
   const widgets = [];
   let cnt = 0;
+
+  // const cursor = syntaxTree(view.state).cursor();
+  // do {
+  //   console.log(`Node ${cursor.name} from ${cursor.from} to ${cursor.to}`);
+  // } while (cursor.next());
+
   for (const { from, to } of view.visibleRanges) {
     syntaxTree(view.state).iterate({
       from,
       to,
       enter: (node) => {
-        if (view.state.doc.sliceString(node.from, node.to) == "useState") {
+        if (node.name == "Comp") {
+          // Reset the counter when we enter a new component
+          cnt = 0;
+        } else if (["useState", "useEffect"].includes(node.name)) {
           const deco = Decoration.widget({
             widget: new HookLabelWidget(cnt++),
             side: 1,
