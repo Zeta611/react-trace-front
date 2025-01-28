@@ -12,7 +12,7 @@ import ReactCodemirror from "@uiw/react-codemirror";
 import * as LanguageJs from "../shared/syntax/language.js";
 import * as CodemirrorThemeTokyoNightDay from "@uiw/codemirror-theme-tokyo-night-day";
 
-var sample = "\nlet C x =\n  let (s, setS) = useState(x) in\n  if s = 42 then\n    setS (fun s -> s + 1);\n  view [()]\n;;\nlet D _ =\n  let (s, setS) = useState(true) in\n  useEffect (setS (fun _ -> false));\n  view [C 42]\n;;\nview [D (), 0]\n".trim();
+var sample = "\nlet C x =\n  let (s, setS) = useState x in\n  if s = 42 then\n    setS (fun s -> s + 1);\n  view [()]\n;;\nlet D _ =\n  let (s, setS) = useState true in\n  useEffect (setS (fun _ -> false));\n  view [C 42]\n;;\nview [D (), 0]\n".trim();
 
 var core = LanguageJs.core;
 
