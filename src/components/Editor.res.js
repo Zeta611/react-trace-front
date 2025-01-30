@@ -4,6 +4,7 @@
 import * as Curry from "rescript/lib/es6/curry.js";
 import * as React from "react";
 import * as Js_exn from "rescript/lib/es6/js_exn.js";
+import * as Checkbox from "./shadcn-ui/Checkbox.res.js";
 import * as Core__Option from "@rescript/core/src/Core__Option.res.js";
 import * as HookLabelPlugin from "../shared/plugin/HookLabelPlugin.res.js";
 import * as ReacttRaceWrapper from "../shared/react-trace/ReacttRaceWrapper.res.js";
@@ -88,17 +89,42 @@ function Editor(props) {
   var match$2 = React.useState(function () {
         return "Core";
       });
+  var setMode = match$2[1];
+  var mode = match$2[0];
   var extensions = [
     CodemirrorThemeTokyoNightDay.tokyoNightDay,
     HookLabelPlugin.plugin
   ];
-  if (match$2[0] === "Core") {
+  if (mode === "Core") {
     extensions.push(coreLang);
   } else {
     extensions.push(javascript);
   }
   return JsxRuntime.jsxs("div", {
               children: [
+                JsxRuntime.jsxs("div", {
+                      children: [
+                        JsxRuntime.jsx(Checkbox.make, {
+                              id: "check-js-mode",
+                              checked: mode === "JS",
+                              onCheckedChange: (function (checked) {
+                                  setMode(function (param) {
+                                        if (checked) {
+                                          return "JS";
+                                        } else {
+                                          return "Core";
+                                        }
+                                      });
+                                })
+                            }),
+                        JsxRuntime.jsx("label", {
+                              children: "JS Syntax",
+                              className: "text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70",
+                              htmlFor: "check-js-mode"
+                            })
+                      ],
+                      className: "flex place-self-end items-center space-x-2"
+                    }),
                 JsxRuntime.jsx(ReactCodemirror, {
                       value: value,
                       onChange: onChange,

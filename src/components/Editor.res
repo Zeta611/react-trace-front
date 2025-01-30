@@ -81,6 +81,18 @@ let make = () => {
   }
 
   <div className="flex flex-col gap-4">
+    <div className="flex place-self-end items-center space-x-2">
+      <Checkbox
+        id="check-js-mode"
+        checked={mode == JS}
+        onCheckedChange={checked => setMode(_ => checked ? JS : Core)}
+      />
+      <label
+        htmlFor="check-js-mode"
+        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+        {"JS Syntax"->React.string}
+      </label>
+    </div>
     <ReactCodeMirror value onChange extensions className="text-base font-mono" />
     <div className="text-lg font-sans text-gray-800 whitespace-pre-wrap">
       {recording->Option.getOr("Loading...")->React.string}
