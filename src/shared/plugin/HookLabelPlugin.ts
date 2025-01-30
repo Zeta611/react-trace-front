@@ -6,6 +6,7 @@ import {
   ViewUpdate,
   WidgetType,
 } from "@codemirror/view";
+import { Range } from "@codemirror/state";
 import { syntaxTree } from "@codemirror/language";
 
 class HookLabelWidget extends WidgetType {
@@ -25,7 +26,7 @@ class HookLabelWidget extends WidgetType {
 }
 
 function hookLabels(view: EditorView) {
-  const widgets = [];
+  const widgets: Range<Decoration>[] = [];
   let cnt = 0;
 
   // const cursor = syntaxTree(view.state).cursor();
