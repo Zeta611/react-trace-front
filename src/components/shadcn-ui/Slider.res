@@ -1,5 +1,9 @@
 type sliderProps = {
-  ...JsxDOM.domProps,
+  value?: array<int>,
+  onValueChange?: array<int> => unit,
+  min?: int,
+  max?: int,
+  step?: int,
 }
 
 @module("./slider") @react.component(: sliderProps)

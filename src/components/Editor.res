@@ -22,7 +22,7 @@ let vim = CodeMirrorVim.vim()
 external core: 'lang = "core"
 let coreLang = core()
 
-let fetchedReacttRace: ref<option<(int, string) => string>> = ref(None)
+let fetchedReacttRace: ref<option<(int, string) => ReacttRace.result>> = ref(None)
 
 let reacttRace = {
   let handleExn = run => (fuel, value) => {
@@ -31,7 +31,7 @@ let reacttRace = {
     } catch {
     | Exn.Error(e) => {
         Console.error(e)
-        "Runtime error"
+        {ReacttRace.error: "Runtime error"}
       }
     }
   }
@@ -54,21 +54,32 @@ let reacttRace = {
 @react.component
 let make = () => {
   let fuel = 0 // 0 means unlimited fuel
-  let (value, setValue) = React.useState(() => sample)
+  let (code, setCode) = React.useState(() => sample)
   let (recording, setRecording) = React.useState(() =>
-    fetchedReacttRace.contents->Option.map(run => run(fuel, value))
+    fetchedReacttRace.contents->Option.map(run => run(fuel, code))
   )
 
   React.useEffect(() => {
     if recording->Option.isNone {
       // ReacttRace has not been fetched yet
-      reacttRace(fuel, value, setRecording)
+      reacttRace(fuel, code, setRecording)
     }
     None
   }, [])
 
+  let (currentStep, setCurrentStep) = React.useState(() => 0)
+  let (report, steps) = switch recording {
+  | Some({checkpoints}) => (
+      checkpoints->Array.slice(~start=0, ~end=currentStep)->Array.join("\n"),
+      checkpoints->Array.length,
+    )
+  | Some({error}) => (error, 0)
+  | _ => ("Loading...", 0)
+  }
+
   let onChange = value => {
-    setValue(_ => value)
+    setCode(_ => value)
+    setCurrentStep(_ => steps)
     reacttRace(fuel, value, setRecording)
   }
 
@@ -112,9 +123,15 @@ let make = () => {
         </label>
       </div>
     </div>
-    <ReactCodeMirror value onChange extensions className="text-base font-mono" />
+    <ReactCodeMirror value=code onChange extensions className="text-base font-mono" />
+    <Slider
+      value=[currentStep]
+      onValueChange={vs => setCurrentStep(_ => vs->Array.getUnsafe(0))}
+      step=1
+      max=steps
+    />
     <div className="text-lg font-sans text-gray-800 whitespace-pre-wrap">
-      {recording->Option.getOr("Loading...")->React.string}
+      {report->React.string}
     </div>
   </div>
 }

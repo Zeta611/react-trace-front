@@ -3,6 +3,7 @@
 
 import * as React from "react";
 import * as Js_exn from "rescript/lib/es6/js_exn.js";
+import * as Slider from "./shadcn-ui/Slider.res.js";
 import * as Checkbox from "./shadcn-ui/Checkbox.res.js";
 import * as Core__Option from "@rescript/core/src/Core__Option.res.js";
 import * as HookLabelPlugin from "../shared/plugin/HookLabelPlugin.res.js";
@@ -38,7 +39,9 @@ function handleExn(run) {
       var e = Caml_js_exceptions.internalToOCamlException(raw_e);
       if (e.RE_EXN_ID === Js_exn.$$Error) {
         console.error(e._1);
-        return "Runtime error";
+        return {
+                error: "Runtime error"
+              };
       }
       throw e;
     }
@@ -67,37 +70,70 @@ function Editor(props) {
   var match = React.useState(function () {
         return sample;
       });
-  var setValue = match[1];
-  var value = match[0];
+  var setCode = match[1];
+  var code = match[0];
   var match$1 = React.useState(function () {
         return Core__Option.map(fetchedReacttRace.contents, (function (run) {
-                      return run(0, value);
+                      return run(0, code);
                     }));
       });
   var setRecording = match$1[1];
   var recording = match$1[0];
   React.useEffect((function () {
           if (Core__Option.isNone(recording)) {
-            reacttRace(0, value, setRecording);
+            reacttRace(0, code, setRecording);
           }
           
         }), []);
+  var match$2 = React.useState(function () {
+        return 0;
+      });
+  var setCurrentStep = match$2[1];
+  var currentStep = match$2[0];
+  var match$3;
+  if (recording !== undefined) {
+    var checkpoints = recording.checkpoints;
+    if (checkpoints !== undefined) {
+      match$3 = [
+        checkpoints.slice(0, currentStep).join("\n"),
+        checkpoints.length
+      ];
+    } else {
+      var error = recording.error;
+      match$3 = error !== undefined ? [
+          error,
+          0
+        ] : [
+          "Loading...",
+          0
+        ];
+    }
+  } else {
+    match$3 = [
+      "Loading...",
+      0
+    ];
+  }
+  var steps = match$3[1];
   var onChange = function (value) {
-    setValue(function (param) {
+    setCode(function (param) {
           return value;
+        });
+    setCurrentStep(function (param) {
+          return steps;
         });
     reacttRace(0, value, setRecording);
   };
-  var match$2 = React.useState(function () {
+  var match$4 = React.useState(function () {
         return false;
       });
-  var setJSMode = match$2[1];
-  var jsMode = match$2[0];
-  var match$3 = React.useState(function () {
+  var setJSMode = match$4[1];
+  var jsMode = match$4[0];
+  var match$5 = React.useState(function () {
         return false;
       });
-  var setVimMode = match$3[1];
-  var vimMode = match$3[0];
+  var setVimMode = match$5[1];
+  var vimMode = match$5[0];
   var extensions = [].concat(vimMode ? [vim] : [], jsMode ? [javascript] : [coreLang], [
         CodemirrorThemeTokyoNightDay.tokyoNightDay,
         HookLabelPlugin.plugin
@@ -148,13 +184,23 @@ function Editor(props) {
                       className: "flex place-self-end items-center space-x-4 text-sm font-medium"
                     }),
                 JsxRuntime.jsx(ReactCodemirror, {
-                      value: value,
+                      value: code,
                       onChange: onChange,
                       extensions: extensions,
                       className: "text-base font-mono"
                     }),
+                JsxRuntime.jsx(Slider.make, {
+                      value: [currentStep],
+                      onValueChange: (function (vs) {
+                          setCurrentStep(function (param) {
+                                return vs[0];
+                              });
+                        }),
+                      max: steps,
+                      step: 1
+                    }),
                 JsxRuntime.jsx("div", {
-                      children: Core__Option.getOr(recording, "Loading..."),
+                      children: match$3[0],
                       className: "text-lg font-sans text-gray-800 whitespace-pre-wrap"
                     })
               ],
