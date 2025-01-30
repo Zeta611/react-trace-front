@@ -1,2 +1,2 @@
 @module("@codemirror/lang-javascript")
-external javascript: 'lang = "javascript"
+external javascript: unit => 'extension = "javascript"

@@ -16,6 +16,7 @@ view [D (), 0]
 `->String.trim
 
 let javascript = LangJavaScript.javascript()
+let vim = CodeMirrorVim.vim()
 
 @module("../shared/syntax/language.js")
 external core: 'lang = "core"
@@ -50,8 +51,6 @@ let reacttRace = {
   }
 }
 
-type mode = Core | JS
-
 @react.component
 let make = () => {
   let fuel = 0 // 0 means unlimited fuel
@@ -73,25 +72,45 @@ let make = () => {
     reacttRace(fuel, value, setRecording)
   }
 
-  let (mode, setMode) = React.useState(() => Core)
-  let extensions = [CodeMirrorThemeTokyoNightDay.tokyoNightDay, HookLabelPlugin.plugin]
-  switch mode {
-  | Core => extensions->Array.push(coreLang)
-  | JS => extensions->Array.push(javascript)
-  }
+  let (jsMode, setJSMode) = React.useState(() => false)
+  let (vimMode, setVimMode) = React.useState(() => false)
+  let extensions = []->Array.concatMany([
+    // vim extension should be the first one
+    if vimMode {
+      [vim]
+    } else {
+      []
+    },
+    if jsMode {
+      [javascript]
+    } else {
+      [coreLang]
+    },
+    [CodeMirrorThemeTokyoNightDay.tokyoNightDay, HookLabelPlugin.plugin],
+  ])
 
   <div className="flex flex-col gap-4">
-    <div className="flex place-self-end items-center space-x-2">
-      <Checkbox
-        id="check-js-mode"
-        checked={mode == JS}
-        onCheckedChange={checked => setMode(_ => checked ? JS : Core)}
-      />
-      <label
-        htmlFor="check-js-mode"
-        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-        {"JS Syntax"->React.string}
-      </label>
+    <div className="flex place-self-end items-center space-x-4 text-sm font-medium">
+      <div className="flex space-x-2">
+        <Checkbox
+          id="check-vim-mode" checked=vimMode onCheckedChange={checked => setVimMode(_ => checked)}
+        />
+        <label
+          htmlFor="check-vim-mode"
+          className="leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+          {"Vim Keymap"->React.string}
+        </label>
+      </div>
+      <div className="flex space-x-2">
+        <Checkbox
+          id="check-js-mode" checked=jsMode onCheckedChange={checked => setJSMode(_ => checked)}
+        />
+        <label
+          htmlFor="check-js-mode"
+          className="leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+          {"JS Syntax"->React.string}
+        </label>
+      </div>
     </div>
     <ReactCodeMirror value onChange extensions className="text-base font-mono" />
     <div className="text-lg font-sans text-gray-800 whitespace-pre-wrap">
