@@ -15,7 +15,7 @@ let D _ =
 view [D (), 0]
 `->String.trim
 
-// let javascript = LangJavaScript.javascript()
+let javascript = LangJavaScript.javascript()
 
 @module("../shared/syntax/language.js")
 external core: 'lang = "core"
@@ -50,9 +50,11 @@ let reacttRace = {
   }
 }
 
+type mode = Core | JS
+
 @react.component
 let make = () => {
-  let fuel = 0
+  let fuel = 0 // 0 means unlimited fuel
   let (value, setValue) = React.useState(() => sample)
   let (recording, setRecording) = React.useState(() =>
     fetchedReacttRace.contents->Option.map(run => run(fuel, value))
@@ -71,13 +73,15 @@ let make = () => {
     reacttRace(fuel, value, setRecording)
   }
 
+  let (mode, setMode) = React.useState(() => Core)
+  let extensions = [CodeMirrorThemeTokyoNightDay.tokyoNightDay, HookLabelPlugin.plugin]
+  switch mode {
+  | Core => extensions->Array.push(coreLang)
+  | JS => extensions->Array.push(javascript)
+  }
+
   <div className="flex flex-col gap-4">
-    <ReactCodeMirror
-      value
-      onChange
-      extensions=[CodeMirrorThemeTokyoNightDay.tokyoNightDay, coreLang, HookLabelPlugin.plugin]
-      className="text-base font-mono"
-    />
+    <ReactCodeMirror value onChange extensions className="text-base font-mono" />
     <div className="text-lg font-sans text-gray-800 whitespace-pre-wrap">
       {recording->Option.getOr("Loading...")->React.string}
     </div>
