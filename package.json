@@ -44,9 +44,5 @@
     "rescript": "^11.1.4",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
-  },
-  "browser": {
-    "fs": false,
-    "child_process": false
   }
 }

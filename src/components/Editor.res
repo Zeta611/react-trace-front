@@ -1,5 +1,3 @@
-@@directive("'use client';")
-
 let sample = `
 let C x =
   let (s, setS) = useState x in
@@ -22,31 +20,13 @@ let vim = CodeMirrorVim.vim()
 external core: 'lang = "core"
 let coreLang = core()
 
-let fetchedReacttRace: ref<option<(int, string) => ReacttRace.result>> = ref(None)
-
-let reacttRace = {
-  let handleExn = run => (fuel, value) => {
-    try {
-      run(fuel, value)
-    } catch {
-    | Exn.Error(e) => {
-        Console.error(e)
-        {ReacttRace.error: "Runtime error"}
-      }
-    }
-  }
-
-  (fuel, value, setRecording) => {
-    switch fetchedReacttRace.contents {
-    | Some(run) => setRecording(_ => Some(run(fuel, value)))
-    | None =>
-      (
-        async () => {
-          let run = handleExn(await ReacttRaceWrapper.fetch())
-          fetchedReacttRace := Some(run)
-          setRecording(_ => Some(run(fuel, value)))
-        }
-      )()->ignore
+let reacttRace = (fuel, value) => {
+  try {
+    ReacttRace.run(fuel, value)
+  } catch {
+  | Exn.Error(e) => {
+      Console.error(e)
+      {ReacttRace.error: "Runtime error"}
     }
   }
 }
@@ -55,32 +35,22 @@ let reacttRace = {
 let make = () => {
   let fuel = 0 // 0 means unlimited fuel
   let (code, setCode) = React.useState(() => sample)
-  let (recording, setRecording) = React.useState(() =>
-    fetchedReacttRace.contents->Option.map(run => run(fuel, code))
-  )
-
-  React.useEffect(() => {
-    if recording->Option.isNone {
-      // ReacttRace has not been fetched yet
-      reacttRace(fuel, code, setRecording)
-    }
-    None
-  }, [])
+  let (recording, setRecording) = React.useState(() => reacttRace(fuel, code))
 
   let (currentStep, setCurrentStep) = React.useState(() => 0)
   let (report, steps) = switch recording {
-  | Some({checkpoints}) => (
+  | {checkpoints} => (
       checkpoints->Array.slice(~start=0, ~end=currentStep)->Array.join("\n"),
       checkpoints->Array.length,
     )
-  | Some({error}) => (error, 0)
-  | _ => ("Loading...", 0)
+  | {error} => (error, 0)
+  | _ => assert(false)
   }
 
   let onChange = value => {
     setCode(_ => value)
     setCurrentStep(_ => steps)
-    reacttRace(fuel, value, setRecording)
+    setRecording(_ => reacttRace(fuel, value))
   }
 
   let (jsMode, setJSMode) = React.useState(() => false)
