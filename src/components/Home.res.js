@@ -5,7 +5,7 @@ import * as React from "react";
 import Dynamic from "next/dynamic";
 import * as JsxRuntime from "react/jsx-runtime";
 
-async function make(param) {
+function Home(props) {
   var lazyEditor = Dynamic((async function () {
           return await import("./Editor.res.js").then(function (m) {
                       return m.make;
@@ -31,11 +31,9 @@ async function make(param) {
             });
 }
 
-var Home = make;
-
-var make$1 = Home;
+var make = Home;
 
 export {
-  make$1 as make,
+  make ,
 }
 /* react Not a pure module */

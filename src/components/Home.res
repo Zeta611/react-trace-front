@@ -1,7 +1,7 @@
 @@directive("'use client';")
 
 @react.component
-let make = async () => {
+let make = () => {
   let lazyEditor = Next.Dynamic.dynamic(
     async () => await import(Editor.make),
     {
