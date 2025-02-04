@@ -2,10 +2,10 @@
   "name": "react-trace-front",
   "version": "0.1.0",
   "sources": [
-    {
-      "dir": "src",
-      "subdirs": true
-    }
+    { "dir": "app", "subdirs": true },
+    { "dir": "bindings", "subdirs": true },
+    { "dir": "components", "subdirs": true },
+    { "dir": "shared", "subdirs": true }
   ],
   "package-specs": [
     {

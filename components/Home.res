@@ -6,7 +6,7 @@ let make = () => {
     async () => await import(Editor.make),
     {
       ssr: false,
-      loading: () => <span> {React.string("Loading...")} </span>,
+      loading: () => <span> {"Loading..."->React.string} </span>,
     },
   )
   let editor = React.createElement(lazyEditor, {})

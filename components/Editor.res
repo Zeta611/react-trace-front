@@ -13,6 +13,18 @@ let D _ =
 view [D (), 0]
 `->String.trim
 
+let treeData = Js.Json.parseExn(`
+  [
+    {
+      "name": "Root",
+      "children": [
+        { "name": "Child 1" },
+        { "name": "Child 2", "children": [{ "name": "Grandchild" }] }
+      ]
+    }
+  ]
+`)
+
 let javascript = LangJavaScript.javascript()
 let vim = CodeMirrorVim.vim()
 
@@ -100,6 +112,9 @@ let make = () => {
       step=1
       max=steps
     />
+    <div className="w-full h-96 rounded-lg resize-y overflow-hidden border">
+      <ReactD3Tree data=treeData orientation="vertical" />
+    </div>
     <div className="text-lg font-sans text-gray-800 whitespace-pre-wrap">
       {report->React.string}
     </div>

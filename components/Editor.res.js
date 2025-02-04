@@ -5,6 +5,7 @@ import * as Js_exn from "rescript/lib/es6/js_exn.js";
 import * as Slider from "./shadcn-ui/Slider.res.js";
 import * as Checkbox from "./shadcn-ui/Checkbox.res.js";
 import * as ReacttRace from "../shared/react-trace/ReacttRace.res.js";
+import ReactD3Tree from "react-d3-tree";
 import * as HookLabelPlugin from "../shared/plugin/HookLabelPlugin.res.js";
 import * as JsxRuntime from "react/jsx-runtime";
 import * as Caml_js_exceptions from "rescript/lib/es6/caml_js_exceptions.js";
@@ -15,6 +16,8 @@ import * as LanguageJs from "../shared/syntax/language.js";
 import * as CodemirrorThemeTokyoNightDay from "@uiw/codemirror-theme-tokyo-night-day";
 
 var sample = "\nlet C x =\n  let (s, setS) = useState x in\n  if s = 42 then\n    setS (fun s -> s + 1);\n  view [()]\n;;\nlet D _ =\n  let (s, setS) = useState true in\n  useEffect (setS (fun _ -> false));\n  view [C 42]\n;;\nview [D (), 0]\n".trim();
+
+var treeData = JSON.parse("\n  [\n    {\n      \"name\": \"Root\",\n      \"children\": [\n        { \"name\": \"Child 1\" },\n        { \"name\": \"Child 2\", \"children\": [{ \"name\": \"Grandchild\" }] }\n      ]\n    }\n  ]\n");
 
 var javascript = LangJavascript.javascript();
 
@@ -75,7 +78,7 @@ function Editor(props) {
             RE_EXN_ID: "Assert_failure",
             _1: [
               "Editor.res",
-              47,
+              59,
               9
             ],
             Error: new Error()
@@ -170,6 +173,13 @@ function Editor(props) {
                       step: 1
                     }),
                 JsxRuntime.jsx("div", {
+                      children: JsxRuntime.jsx(ReactD3Tree, {
+                            data: treeData,
+                            orientation: "vertical"
+                          }),
+                      className: "w-full h-96 rounded-lg resize-y overflow-hidden border"
+                    }),
+                JsxRuntime.jsx("div", {
                       children: match$3[0],
                       className: "text-lg font-sans text-gray-800 whitespace-pre-wrap"
                     })
@@ -182,6 +192,7 @@ var make = Editor;
 
 export {
   sample ,
+  treeData ,
   javascript ,
   vim ,
   core ,
