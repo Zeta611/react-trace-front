@@ -27,6 +27,28 @@ let treeData = Js.Json.parseExn(`
   ]
 `)
 
+let useCenteredTree = () => {
+  open ReactD3Tree
+  let (translate, setTranslate) = React.useState(() => {x: 0., y: 0.})
+  let containerRef = ReactDOM.Ref.callbackDomRef(container => {
+    switch container {
+    | Value(container) => {
+        open Webapi.Dom
+        let rect = container->Element.getBoundingClientRect
+        let width = rect->DomRect.width
+        let height = rect->DomRect.height
+        let x = width /. 2.
+        let y = height /. 6.
+        if translate.x !== x || translate.y !== y {
+          setTranslate(_ => {x, y})
+        }
+      }
+    | _ => ()
+    }
+  })
+  (translate, containerRef)
+}
+
 let javascript = LangJavaScript.javascript()
 let vim = CodeMirrorVim.vim()
 
@@ -87,6 +109,8 @@ let make = () => {
     [CodeMirrorThemeTokyoNightDay.tokyoNightDay, HookLabelPlugin.plugin],
   ])
 
+  let (translate, containerRef) = useCenteredTree()
+
   <div className="flex flex-col gap-4">
     <div className="flex place-self-end items-center space-x-4 text-sm font-medium">
       <div className="flex space-x-2">
@@ -117,8 +141,8 @@ let make = () => {
       step=1
       max=steps
     />
-    <div className="w-full h-96 rounded-lg resize-y overflow-hidden border">
-      <ReactD3Tree data=treeData orientation="vertical" />
+    <div className="w-full h-96 rounded-lg resize-y overflow-hidden border" ref=containerRef>
+      <ReactD3Tree data=treeData translate orientation="vertical" />
     </div>
     <div className="text-lg font-sans text-gray-800 whitespace-pre-wrap">
       {report->React.string}

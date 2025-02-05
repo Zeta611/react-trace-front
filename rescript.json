@@ -18,6 +18,6 @@
     "version": 4,
     "mode": "automatic"
   },
-  "bs-dependencies": ["@rescript/core", "@rescript/react"],
+  "bs-dependencies": ["@rescript/core", "@rescript/react", "rescript-webapi"],
   "bsc-flags": ["-open RescriptCore"]
 }

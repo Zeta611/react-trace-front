@@ -30,6 +30,7 @@
     "react": "^19.0.0",
     "react-d3-tree": "^3.6.2",
     "react-dom": "^19.0.0",
+    "rescript-webapi": "^0.10.0",
     "tailwind-merge": "^3.0.1",
     "tailwindcss-animate": "^1.0.7"
   },

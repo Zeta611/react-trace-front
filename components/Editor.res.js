@@ -6,6 +6,7 @@ import * as Js_exn from "rescript/lib/es6/js_exn.js";
 import * as Slider from "./shadcn-ui/Slider.res.js";
 import * as Checkbox from "./shadcn-ui/Checkbox.res.js";
 import * as ReacttRace from "../shared/react-trace/ReacttRace.res.js";
+import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import ReactD3Tree from "react-d3-tree";
 import * as HookLabelPlugin from "../shared/plugin/HookLabelPlugin.res.js";
 import * as JsxRuntime from "react/jsx-runtime";
@@ -19,6 +20,40 @@ import * as CodemirrorThemeTokyoNightDay from "@uiw/codemirror-theme-tokyo-night
 var sample = "\nlet C x =\n  let (s, setS) = useState x in\n  if s = 42 then\n    setS (fun s -> s + 1);\n  view [()]\n;;\nlet D _ =\n  let (s, setS) = useState true in\n  useEffect (setS (fun _ -> false));\n  view [C 42]\n;;\nview [D (), 0]\n".trim();
 
 var treeData = JSON.parse("\n  [\n    {\n      \"name\": \"Root\",\n      \"children\": [\n        { \"name\": \"Child 1\" },\n        { \"name\": \"Child 2\", \"children\": [{ \"name\": \"Grandchild\" }] }\n      ]\n    }\n  ]\n");
+
+function useCenteredTree() {
+  var match = React.useState(function () {
+        return {
+                x: 0,
+                y: 0
+              };
+      });
+  var setTranslate = match[1];
+  var translate = match[0];
+  var containerRef = function (container) {
+    if (container === null || container === undefined) {
+      return ;
+    }
+    var rect = container.getBoundingClientRect();
+    var width = rect.width;
+    var height = rect.height;
+    var x = width / 2;
+    var y = height / 6;
+    if (translate.x !== x || translate.y !== y) {
+      return setTranslate(function (param) {
+                  return {
+                          x: x,
+                          y: y
+                        };
+                });
+    }
+    
+  };
+  return [
+          translate,
+          containerRef
+        ];
+}
 
 var javascript = LangJavascript.javascript();
 
@@ -81,7 +116,7 @@ function Editor(props) {
             RE_EXN_ID: "Assert_failure",
             _1: [
               "Editor.res",
-              64,
+              86,
               9
             ],
             Error: new Error()
@@ -114,6 +149,7 @@ function Editor(props) {
         CodemirrorThemeTokyoNightDay.tokyoNightDay,
         HookLabelPlugin.plugin
       ]);
+  var match$6 = useCenteredTree();
   return JsxRuntime.jsxs("div", {
               children: [
                 JsxRuntime.jsxs("div", {
@@ -178,8 +214,10 @@ function Editor(props) {
                 JsxRuntime.jsx("div", {
                       children: JsxRuntime.jsx(ReactD3Tree, {
                             data: treeData,
+                            translate: match$6[0],
                             orientation: "vertical"
                           }),
+                      ref: Caml_option.some(match$6[1]),
                       className: "w-full h-96 rounded-lg resize-y overflow-hidden border"
                     }),
                 JsxRuntime.jsx("div", {
@@ -196,6 +234,7 @@ var make = Editor;
 export {
   sample ,
   treeData ,
+  useCenteredTree ,
   javascript ,
   vim ,
   core ,
