@@ -1,3 +1,5 @@
+type rec data = {name?: string, children?: array<data>}
+
 type translation = {
   x: float,
   y: float,
@@ -5,7 +7,7 @@ type translation = {
 
 @module("react-d3-tree") @react.component
 external make: (
-  ~data: Js.Json.t,
+  ~data: data,
   ~translate: translation=?,
   ~orientation: string=?,
   ~pathFunc: string=?,

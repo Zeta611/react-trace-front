@@ -15,18 +15,6 @@ let D _ =
 view [D (), 0]
 `->String.trim
 
-let treeData = Js.Json.parseExn(`
-  [
-    {
-      "name": "Root",
-      "children": [
-        { "name": "Child 1" },
-        { "name": "Child 2", "children": [{ "name": "Grandchild" }] }
-      ]
-    }
-  ]
-`)
-
 let useCenteredTree = () => {
   open ReactD3Tree
   let (translate, setTranslate) = React.useState(() => {x: 0., y: 0.})
@@ -38,7 +26,7 @@ let useCenteredTree = () => {
         let width = rect->DomRect.width
         let height = rect->DomRect.height
         let x = width /. 2.
-        let y = height /. 6.
+        let y = height /. 10.
         if translate.x !== x || translate.y !== y {
           setTranslate(_ => {x, y})
         }
@@ -56,40 +44,38 @@ let vim = CodeMirrorVim.vim()
 external core: 'lang = "core"
 let coreLang = core()
 
-let reacttRace = (fuel, value) => {
-  try {
-    ReacttRace.run(fuel, value)
-  } catch {
-  | Exn.Error(e) => {
-      Console.error(e)
-      {ReacttRace.error: "Runtime error"}
-    }
-  }
-}
-
 @react.component
 let make = () => {
   let fuel = 0 // 0 means unlimited fuel
   let (code, setCode) = React.useState(() => sample)
-  let (recording, setRecording) = React.useState(() => reacttRace(fuel, code))
+  let (recording, setRecording) = React.useState(() => ReacttRace.run(fuel, code))
 
   let (currentStep, setCurrentStep) = React.useState(() => 0)
-  let (report, steps) = switch recording {
-  | {checkpoints} => (
-      checkpoints
-      ->Array.slice(~start=0, ~end=currentStep)
-      ->Array.map(x => x.ReacttRace.msg)
-      ->Array.join("\n"),
-      checkpoints->Array.length,
-    )
-  | {error} => (error, 0)
+  let (report, treeData, steps) = switch recording {
+  | {checkpoints} => {
+      open ReacttRace
+      (
+        checkpoints
+        ->Array.map(x => x.msg)
+        ->Array.slice(~start=0, ~end=currentStep)
+        ->Array.join("\n"),
+        if currentStep == 0 {
+          ({}: ReactD3Tree.data)
+        } else {
+          /* Field names are shared, so we can use the same record type */
+          (checkpoints->Array.getUnsafe(currentStep - 1)).tree->Obj.magic
+        },
+        checkpoints->Array.length,
+      )
+    }
+  | {error} => (error, {}, 0)
   | _ => assert(false)
   }
 
   let onChange = value => {
     setCode(_ => value)
     setCurrentStep(_ => steps)
-    setRecording(_ => reacttRace(fuel, value))
+    setRecording(_ => ReacttRace.run(fuel, value))
   }
 
   let (jsMode, setJSMode) = React.useState(() => false)
@@ -141,10 +127,10 @@ let make = () => {
       step=1
       max=steps
     />
-    <div className="w-full h-96 rounded-lg resize-y overflow-hidden border" ref=containerRef>
+    <div className="w-full h-[500px] rounded-lg resize-y overflow-hidden border" ref=containerRef>
       <ReactD3Tree data=treeData translate orientation="vertical" />
     </div>
-    <div className="text-lg font-sans text-gray-800 whitespace-pre-wrap">
+    <div className="text-base font-sans text-gray-800 whitespace-pre-wrap">
       {report->React.string}
     </div>
   </div>

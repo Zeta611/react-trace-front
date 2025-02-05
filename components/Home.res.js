@@ -11,7 +11,7 @@ var lazyEditor = Dynamic((async function () {
                     return m.make;
                   });
       }), {
-      ssr: process.env.NODE_ENV === "development",
+      ssr: false,
       loading: (function () {
           return JsxRuntime.jsxs("div", {
                       children: [

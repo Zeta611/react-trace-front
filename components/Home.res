@@ -5,7 +5,7 @@
 let lazyEditor = Next.Dynamic.dynamic(
   async () => await import(Editor.make),
   {
-    ssr: process["env"]["NODE_ENV"] == "development",
+    ssr: false,
     loading: () =>
       <div className="flex flex-col gap-4">
         <Skeleton className="h-96" />
