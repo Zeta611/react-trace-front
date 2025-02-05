@@ -1,9 +1,11 @@
 @@directive("'use client';")
 
+@val external process: 'process = "process"
+
 let lazyEditor = Next.Dynamic.dynamic(
   async () => await import(Editor.make),
   {
-    ssr: %raw("process.env.NODE_ENV === 'development'"),
+    ssr: process["env"]["NODE_ENV"] == "development",
     loading: () => <Loading />,
   },
 )
