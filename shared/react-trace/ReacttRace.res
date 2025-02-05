@@ -1,5 +1,6 @@
+type entry = {msg: string}
 type result = {
-  checkpoints?: array<string>,
+  checkpoints?: array<entry>,
   log?: string,
   error?: string,
 }

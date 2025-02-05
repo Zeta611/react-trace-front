@@ -54,7 +54,10 @@ let make = () => {
   let (currentStep, setCurrentStep) = React.useState(() => 0)
   let (report, steps) = switch recording {
   | {checkpoints} => (
-      checkpoints->Array.slice(~start=0, ~end=currentStep)->Array.join("\n"),
+      checkpoints
+      ->Array.slice(~start=0, ~end=currentStep)
+      ->Array.map(x => x.ReacttRace.msg)
+      ->Array.join("\n"),
       checkpoints->Array.length,
     )
   | {error} => (error, 0)

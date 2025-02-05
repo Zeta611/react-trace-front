@@ -64,7 +64,9 @@ function Editor(props) {
   var match$3;
   if (checkpoints !== undefined) {
     match$3 = [
-      checkpoints.slice(0, currentStep).join("\n"),
+      checkpoints.slice(0, currentStep).map(function (x) {
+              return x.msg;
+            }).join("\n"),
       checkpoints.length
     ];
   } else {
@@ -79,7 +81,7 @@ function Editor(props) {
             RE_EXN_ID: "Assert_failure",
             _1: [
               "Editor.res",
-              61,
+              64,
               9
             ],
             Error: new Error()
