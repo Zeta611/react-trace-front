@@ -1,14 +1,15 @@
 @@directive("'use client';")
 
+let lazyEditor = Next.Dynamic.dynamic(
+  async () => await import(Editor.make),
+  {
+    ssr: %raw("process.env.NODE_ENV === 'development'"),
+    loading: () => <Loading />,
+  },
+)
+
 @react.component
 let make = () => {
-  let lazyEditor = Next.Dynamic.dynamic(
-    async () => await import(Editor.make),
-    {
-      ssr: false,
-      loading: () => <span> {"Loading..."->React.string} </span>,
-    },
-  )
   let editor = React.createElement(lazyEditor, {})
 
   <main className="flex flex-col gap-4">

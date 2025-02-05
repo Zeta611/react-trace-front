@@ -1,3 +1,5 @@
+@@directive("'use client';")
+
 let sample = `
 let C x =
   let (s, setS) = useState x in
