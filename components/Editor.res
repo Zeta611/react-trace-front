@@ -120,16 +120,22 @@ let make = () => {
         </label>
       </div>
     </div>
-    <ReactCodeMirror value=code onChange extensions className="text-base font-mono" />
+    <div className="flex flex-col lg:flex-row gap-2">
+      <ReactCodeMirror
+        value=code onChange extensions className="w-full lg:w-1/2 text-base font-mono"
+      />
+      <div
+        className="w-full lg:w-1/2 h-[500px] rounded-lg resize-y overflow-hidden border"
+        ref=containerRef>
+        <ReactD3Tree data=treeData translate orientation="vertical" />
+      </div>
+    </div>
     <Slider
       value=[currentStep]
       onValueChange={vs => setCurrentStep(_ => vs->Array.getUnsafe(0))}
       step=1
       max=steps
     />
-    <div className="w-full h-[500px] rounded-lg resize-y overflow-hidden border" ref=containerRef>
-      <ReactD3Tree data=treeData translate orientation="vertical" />
-    </div>
     <div className="text-base font-sans text-gray-800 whitespace-pre-wrap">
       {report->React.string}
     </div>

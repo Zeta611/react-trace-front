@@ -177,11 +177,25 @@ function Editor(props) {
                       ],
                       className: "flex place-self-end items-center space-x-4 text-sm font-medium"
                     }),
-                JsxRuntime.jsx(ReactCodemirror, {
-                      value: code,
-                      onChange: onChange,
-                      extensions: extensions,
-                      className: "text-base font-mono"
+                JsxRuntime.jsxs("div", {
+                      children: [
+                        JsxRuntime.jsx(ReactCodemirror, {
+                              value: code,
+                              onChange: onChange,
+                              extensions: extensions,
+                              className: "w-full lg:w-1/2 text-base font-mono"
+                            }),
+                        JsxRuntime.jsx("div", {
+                              children: JsxRuntime.jsx(ReactD3Tree, {
+                                    data: match$3[1],
+                                    translate: match$6[0],
+                                    orientation: "vertical"
+                                  }),
+                              ref: Caml_option.some(match$6[1]),
+                              className: "w-full lg:w-1/2 h-[500px] rounded-lg resize-y overflow-hidden border"
+                            })
+                      ],
+                      className: "flex flex-col lg:flex-row gap-2"
                     }),
                 JsxRuntime.jsx(Slider.make, {
                       value: [currentStep],
@@ -192,15 +206,6 @@ function Editor(props) {
                         }),
                       max: steps,
                       step: 1
-                    }),
-                JsxRuntime.jsx("div", {
-                      children: JsxRuntime.jsx(ReactD3Tree, {
-                            data: match$3[1],
-                            translate: match$6[0],
-                            orientation: "vertical"
-                          }),
-                      ref: Caml_option.some(match$6[1]),
-                      className: "w-full h-[500px] rounded-lg resize-y overflow-hidden border"
                     }),
                 JsxRuntime.jsx("div", {
                       children: match$3[0],

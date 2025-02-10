@@ -33,7 +33,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${notoSerif.variable} ${montserrat.variable} ${jetbrainsMono.variable} antialiased px-6 py-6 max-w-xl mx-auto md:max-w-2xl`}
+        className={`${notoSerif.variable} ${montserrat.variable} ${jetbrainsMono.variable} antialiased px-10 py-6`}
       >
         {children}
       </body>
