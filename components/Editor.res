@@ -62,8 +62,11 @@ let make = () => {
         if currentStep == 0 {
           ({}: ReactD3Tree.data)
         } else {
-          /* Field names are shared, so we can use the same record type */
-          (checkpoints->Array.getUnsafe(currentStep - 1)).tree->Obj.magic
+          // Field names are shared, so we can use the same record type
+          switch checkpoints[currentStep - 1] {
+          | Some({tree}) => tree->Obj.magic
+          | None => ({}: ReactD3Tree.data) // Intermediate state
+          }
         },
         checkpoints->Array.length,
       )

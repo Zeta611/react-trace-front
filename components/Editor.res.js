@@ -78,11 +78,18 @@ function Editor(props) {
   var checkpoints = recording.checkpoints;
   var match$3;
   if (checkpoints !== undefined) {
+    var tmp;
+    if (currentStep === 0) {
+      tmp = {};
+    } else {
+      var match$4 = checkpoints[currentStep - 1 | 0];
+      tmp = match$4 !== undefined ? match$4.tree : ({});
+    }
     match$3 = [
       checkpoints.map(function (x) {
                 return x.msg;
               }).slice(0, currentStep).join("\n"),
-      currentStep === 0 ? ({}) : checkpoints[currentStep - 1 | 0].tree,
+      tmp,
       checkpoints.length
     ];
   } else {
@@ -98,7 +105,7 @@ function Editor(props) {
             RE_EXN_ID: "Assert_failure",
             _1: [
               "Editor.res",
-              72,
+              75,
               9
             ],
             Error: new Error()
@@ -117,21 +124,21 @@ function Editor(props) {
           return ReacttRace.run(0, value);
         });
   };
-  var match$4 = React.useState(function () {
-        return false;
-      });
-  var setJSMode = match$4[1];
-  var jsMode = match$4[0];
   var match$5 = React.useState(function () {
         return false;
       });
-  var setVimMode = match$5[1];
-  var vimMode = match$5[0];
+  var setJSMode = match$5[1];
+  var jsMode = match$5[0];
+  var match$6 = React.useState(function () {
+        return false;
+      });
+  var setVimMode = match$6[1];
+  var vimMode = match$6[0];
   var extensions = [].concat(vimMode ? [vim] : [], jsMode ? [javascript] : [coreLang], [
         CodemirrorThemeTokyoNightDay.tokyoNightDay,
         HookLabelPlugin.plugin
       ]);
-  var match$6 = useCenteredTree();
+  var match$7 = useCenteredTree();
   return JsxRuntime.jsxs("div", {
               children: [
                 JsxRuntime.jsxs("div", {
@@ -188,10 +195,10 @@ function Editor(props) {
                         JsxRuntime.jsx("div", {
                               children: JsxRuntime.jsx(ReactD3Tree, {
                                     data: match$3[1],
-                                    translate: match$6[0],
+                                    translate: match$7[0],
                                     orientation: "vertical"
                                   }),
-                              ref: Caml_option.some(match$6[1]),
+                              ref: Caml_option.some(match$7[1]),
                               className: "w-full lg:w-1/2 h-[500px] rounded-lg resize-y overflow-hidden border"
                             })
                       ],
