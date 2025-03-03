@@ -7,6 +7,7 @@ This is a frontend web interface for [React-tRrace](https://github.com/React-Ana
 ## Getting Started
 
 ```bash
+bun install
 bun res:build && bun dev
 ```
 
