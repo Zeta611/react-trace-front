@@ -15,7 +15,7 @@ import * as LangJavascript from "@codemirror/lang-javascript";
 import * as LanguageJs from "../shared/syntax/language.js";
 import * as CodemirrorThemeTokyoNightDay from "@uiw/codemirror-theme-tokyo-night-day";
 
-var sample = "\nlet C x =\n  let (s, setS) = useState x in\n  if s = 42 then\n    setS (fun s -> s + 1);\n  view [s]\n;;\nlet D _ =\n  let (s, setS) = useState true in\n  useEffect (setS (fun _ -> false));\n  view [C 42, if s then 1 else 0]\n;;\nview [D (), ()]\n".trim();
+var sample = "\nlet C x =\n  let (s, setS) = useState x in\n  if s = 42 then\n    setS (fun s -> s + 1);\n  s\n;;\nlet D _ =\n  let (s, setS) = useState true in\n  useEffect (setS (fun _ -> false));\n  [C 42, if s then 1 else 0]\n;;\nD ()\n".trim();
 
 function useCenteredTree() {
   var match = React.useState(function () {
