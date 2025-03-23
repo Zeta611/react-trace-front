@@ -44,6 +44,16 @@ let vim = CodeMirrorVim.vim()
 external core: 'lang = "core"
 let coreLang = core()
 
+let replaceEmojis = (s: string) =>
+  s
+  ->String.replace(":event:", "⚡")
+  ->String.replace(":retry:", "🔁")
+  ->String.replace(":check:", "🏗️")
+  ->String.replace(":finish:", "✅")
+  ->String.replace(":cancel:", "⏩")
+  ->String.replace(":effects:", "⚙️")
+  ->String.replace(":default:", "🔄")
+
 @react.component
 let make = () => {
   let fuel = 0 // 0 means unlimited fuel
@@ -56,7 +66,7 @@ let make = () => {
       open ReacttRace
       (
         checkpoints
-        ->Array.map(x => x.msg)
+        ->Array.map(x => x.msg->replaceEmojis)
         ->Array.slice(~start=0, ~end=currentStep)
         ->Array.join("\n"),
         if currentStep == 0 {

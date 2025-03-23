@@ -59,6 +59,10 @@ var core = LanguageJs.core;
 
 var coreLang = core();
 
+function replaceEmojis(s) {
+  return s.replace(":event:", "⚡").replace(":retry:", "🔁").replace(":check:", "🏗️").replace(":finish:", "✅").replace(":cancel:", "⏩").replace(":effects:", "⚙️").replace(":default:", "🔄");
+}
+
 function Editor(props) {
   var match = React.useState(function () {
         return sample;
@@ -87,7 +91,7 @@ function Editor(props) {
     }
     match$3 = [
       checkpoints.map(function (x) {
-                return x.msg;
+                return replaceEmojis(x.msg);
               }).slice(0, currentStep).join("\n"),
       tmp,
       checkpoints.length
@@ -105,7 +109,7 @@ function Editor(props) {
             RE_EXN_ID: "Assert_failure",
             _1: [
               "Editor.res",
-              75,
+              85,
               9
             ],
             Error: new Error()
@@ -232,6 +236,7 @@ export {
   vim ,
   core ,
   coreLang ,
+  replaceEmojis ,
   make ,
 }
 /* sample Not a pure module */
