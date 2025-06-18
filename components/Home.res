@@ -18,8 +18,8 @@ let lazyEditor = Next.Dynamic.dynamic(
 let make = () => {
   let editor = React.createElement(lazyEditor, {})
 
-  <main className="flex flex-col gap-4">
-    <h1 className="text-4xl font-serif"> {"React-tRace"->React.string} </h1>
+  <main className="flex h-screen flex-col">
+    <h1 className="text-4xl p-3 font-serif"> {"React-tRace"->React.string} </h1>
     editor
   </main>
 }

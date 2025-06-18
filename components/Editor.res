@@ -110,47 +110,65 @@ let make = () => {
 
   let (translate, containerRef) = useCenteredTree()
 
-  <div className="flex flex-col gap-4">
-    <div className="flex place-self-end items-center space-x-4 text-sm font-medium">
-      <div className="flex space-x-2">
-        <Checkbox
-          id="check-vim-mode" checked=vimMode onCheckedChange={checked => setVimMode(_ => checked)}
+  <Resizable.PanelGroup direction="vertical">
+    <Resizable.Panel>
+      <Resizable.PanelGroup direction="horizontal">
+        <Resizable.Panel>
+          <div className="flex h-full flex-col">
+            <div
+              className="pb-1 pr-3 flex place-content-end items-center gap-x-4 text-sm font-medium">
+              <div className="flex gap-x-2">
+                <Checkbox
+                  id="check-vim-mode"
+                  checked=vimMode
+                  onCheckedChange={checked => setVimMode(_ => checked)}
+                />
+                <label
+                  htmlFor="check-vim-mode"
+                  className="leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                  {"Vim Keymap"->React.string}
+                </label>
+              </div>
+              <div className="flex gap-x-2">
+                <Checkbox
+                  id="check-js-mode"
+                  checked=jsMode
+                  onCheckedChange={checked => setJSMode(_ => checked)}
+                />
+                <label
+                  htmlFor="check-js-mode"
+                  className="leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                  {"JS Syntax"->React.string}
+                </label>
+              </div>
+            </div>
+            <ReactCodeMirror
+              value=code onChange extensions className="h-full text-base font-mono" height="100%"
+            />
+          </div>
+        </Resizable.Panel>
+        <Resizable.Handle withHandle=true />
+        <Resizable.Panel>
+          <div className="rounded-lg h-full resize-y overflow-hidden border" ref=containerRef>
+            <ReactD3Tree translate data=treeData orientation="vertical" />
+          </div>
+        </Resizable.Panel>
+      </Resizable.PanelGroup>
+    </Resizable.Panel>
+    <Resizable.Handle withHandle=true />
+    <Resizable.Panel>
+      <div className="flex flex-col h-full gap-4 p-3">
+        <Slider
+          className="w-full"
+          value=[currentStep]
+          onValueChange={vs => setCurrentStep(_ => vs->Array.getUnsafe(0))}
+          step=1
+          max=steps
         />
-        <label
-          htmlFor="check-vim-mode"
-          className="leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-          {"Vim Keymap"->React.string}
-        </label>
+        <div className="text-base font-sans text-gray-800 whitespace-pre-wrap">
+          {report->React.string}
+        </div>
       </div>
-      <div className="flex space-x-2">
-        <Checkbox
-          id="check-js-mode" checked=jsMode onCheckedChange={checked => setJSMode(_ => checked)}
-        />
-        <label
-          htmlFor="check-js-mode"
-          className="leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-          {"JS Syntax"->React.string}
-        </label>
-      </div>
-    </div>
-    <div className="flex flex-col lg:flex-row gap-2">
-      <ReactCodeMirror
-        value=code onChange extensions className="w-full lg:w-1/2 text-base font-mono"
-      />
-      <div
-        className="w-full lg:w-1/2 h-[500px] rounded-lg resize-y overflow-hidden border"
-        ref=containerRef>
-        <ReactD3Tree data=treeData translate orientation="vertical" />
-      </div>
-    </div>
-    <Slider
-      value=[currentStep]
-      onValueChange={vs => setCurrentStep(_ => vs->Array.getUnsafe(0))}
-      step=1
-      max=steps
-    />
-    <div className="text-base font-sans text-gray-800 whitespace-pre-wrap">
-      {report->React.string}
-    </div>
-  </div>
+    </Resizable.Panel>
+  </Resizable.PanelGroup>
 }

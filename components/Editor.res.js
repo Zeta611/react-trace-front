@@ -4,6 +4,7 @@
 import * as React from "react";
 import * as Slider from "./shadcn-ui/Slider.res.js";
 import * as Checkbox from "./shadcn-ui/Checkbox.res.js";
+import * as Resizable from "./shadcn-ui/Resizable.res.js";
 import * as ReacttRace from "../shared/react-trace/ReacttRace.res.js";
 import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import ReactD3Tree from "react-d3-tree";
@@ -143,87 +144,113 @@ function Editor(props) {
         HookLabelPlugin.plugin
       ]);
   var match$7 = useCenteredTree();
-  return JsxRuntime.jsxs("div", {
+  return JsxRuntime.jsxs(Resizable.PanelGroup.make, {
               children: [
-                JsxRuntime.jsxs("div", {
-                      children: [
-                        JsxRuntime.jsxs("div", {
-                              children: [
-                                JsxRuntime.jsx(Checkbox.make, {
-                                      id: "check-vim-mode",
-                                      checked: vimMode,
-                                      onCheckedChange: (function (checked) {
-                                          setVimMode(function (param) {
-                                                return checked;
-                                              });
+                JsxRuntime.jsx(Resizable.Panel.make, {
+                      children: JsxRuntime.jsxs(Resizable.PanelGroup.make, {
+                            children: [
+                              JsxRuntime.jsx(Resizable.Panel.make, {
+                                    children: JsxRuntime.jsxs("div", {
+                                          children: [
+                                            JsxRuntime.jsxs("div", {
+                                                  children: [
+                                                    JsxRuntime.jsxs("div", {
+                                                          children: [
+                                                            JsxRuntime.jsx(Checkbox.make, {
+                                                                  id: "check-vim-mode",
+                                                                  checked: vimMode,
+                                                                  onCheckedChange: (function (checked) {
+                                                                      setVimMode(function (param) {
+                                                                            return checked;
+                                                                          });
+                                                                    })
+                                                                }),
+                                                            JsxRuntime.jsx("label", {
+                                                                  children: "Vim Keymap",
+                                                                  className: "leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70",
+                                                                  htmlFor: "check-vim-mode"
+                                                                })
+                                                          ],
+                                                          className: "flex gap-x-2"
+                                                        }),
+                                                    JsxRuntime.jsxs("div", {
+                                                          children: [
+                                                            JsxRuntime.jsx(Checkbox.make, {
+                                                                  id: "check-js-mode",
+                                                                  checked: jsMode,
+                                                                  onCheckedChange: (function (checked) {
+                                                                      setJSMode(function (param) {
+                                                                            return checked;
+                                                                          });
+                                                                    })
+                                                                }),
+                                                            JsxRuntime.jsx("label", {
+                                                                  children: "JS Syntax",
+                                                                  className: "leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70",
+                                                                  htmlFor: "check-js-mode"
+                                                                })
+                                                          ],
+                                                          className: "flex gap-x-2"
+                                                        })
+                                                  ],
+                                                  className: "pb-1 pr-3 flex place-content-end items-center gap-x-4 text-sm font-medium"
+                                                }),
+                                            JsxRuntime.jsx(ReactCodemirror, {
+                                                  value: code,
+                                                  height: "100%",
+                                                  onChange: onChange,
+                                                  extensions: extensions,
+                                                  className: "h-full text-base font-mono"
+                                                })
+                                          ],
+                                          className: "flex h-full flex-col"
                                         })
-                                    }),
-                                JsxRuntime.jsx("label", {
-                                      children: "Vim Keymap",
-                                      className: "leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70",
-                                      htmlFor: "check-vim-mode"
-                                    })
-                              ],
-                              className: "flex space-x-2"
-                            }),
-                        JsxRuntime.jsxs("div", {
-                              children: [
-                                JsxRuntime.jsx(Checkbox.make, {
-                                      id: "check-js-mode",
-                                      checked: jsMode,
-                                      onCheckedChange: (function (checked) {
-                                          setJSMode(function (param) {
-                                                return checked;
-                                              });
-                                        })
-                                    }),
-                                JsxRuntime.jsx("label", {
-                                      children: "JS Syntax",
-                                      className: "leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70",
-                                      htmlFor: "check-js-mode"
-                                    })
-                              ],
-                              className: "flex space-x-2"
-                            })
-                      ],
-                      className: "flex place-self-end items-center space-x-4 text-sm font-medium"
-                    }),
-                JsxRuntime.jsxs("div", {
-                      children: [
-                        JsxRuntime.jsx(ReactCodemirror, {
-                              value: code,
-                              onChange: onChange,
-                              extensions: extensions,
-                              className: "w-full lg:w-1/2 text-base font-mono"
-                            }),
-                        JsxRuntime.jsx("div", {
-                              children: JsxRuntime.jsx(ReactD3Tree, {
-                                    data: match$3[1],
-                                    translate: match$7[0],
-                                    orientation: "vertical"
                                   }),
-                              ref: Caml_option.some(match$7[1]),
-                              className: "w-full lg:w-1/2 h-[500px] rounded-lg resize-y overflow-hidden border"
-                            })
-                      ],
-                      className: "flex flex-col lg:flex-row gap-2"
+                              JsxRuntime.jsx(Resizable.Handle.make, {
+                                    withHandle: true
+                                  }),
+                              JsxRuntime.jsx(Resizable.Panel.make, {
+                                    children: JsxRuntime.jsx("div", {
+                                          children: JsxRuntime.jsx(ReactD3Tree, {
+                                                data: match$3[1],
+                                                translate: match$7[0],
+                                                orientation: "vertical"
+                                              }),
+                                          ref: Caml_option.some(match$7[1]),
+                                          className: "rounded-lg h-full resize-y overflow-hidden border"
+                                        })
+                                  })
+                            ],
+                            direction: "horizontal"
+                          })
                     }),
-                JsxRuntime.jsx(Slider.make, {
-                      value: [currentStep],
-                      onValueChange: (function (vs) {
-                          setCurrentStep(function (param) {
-                                return vs[0];
-                              });
-                        }),
-                      max: steps,
-                      step: 1
+                JsxRuntime.jsx(Resizable.Handle.make, {
+                      withHandle: true
                     }),
-                JsxRuntime.jsx("div", {
-                      children: match$3[0],
-                      className: "text-base font-sans text-gray-800 whitespace-pre-wrap"
+                JsxRuntime.jsx(Resizable.Panel.make, {
+                      children: JsxRuntime.jsxs("div", {
+                            children: [
+                              JsxRuntime.jsx(Slider.make, {
+                                    className: "w-full",
+                                    value: [currentStep],
+                                    onValueChange: (function (vs) {
+                                        setCurrentStep(function (param) {
+                                              return vs[0];
+                                            });
+                                      }),
+                                    max: steps,
+                                    step: 1
+                                  }),
+                              JsxRuntime.jsx("div", {
+                                    children: match$3[0],
+                                    className: "text-base font-sans text-gray-800 whitespace-pre-wrap"
+                                  })
+                            ],
+                            className: "flex flex-col h-full gap-4 p-3"
+                          })
                     })
               ],
-              className: "flex flex-col gap-4"
+              direction: "vertical"
             });
 }
 

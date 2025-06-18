@@ -33,11 +33,11 @@ function Home(props) {
               children: [
                 JsxRuntime.jsx("h1", {
                       children: "React-tRace",
-                      className: "text-4xl font-serif"
+                      className: "text-4xl p-3 font-serif"
                     }),
                 editor
               ],
-              className: "flex flex-col gap-4"
+              className: "flex h-screen flex-col"
             });
 }
 

@@ -1,4 +1,5 @@
 type sliderProps = {
+  className?: string,
   value?: array<int>,
   onValueChange?: array<int> => unit,
   min?: int,
